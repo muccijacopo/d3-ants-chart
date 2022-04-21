@@ -3,6 +3,7 @@ export interface Ant {
     legsLength: number;
     headSize: number;
     bodySize: number;
+    backSize: number;
 }
 
 export type AntDataset = Ant[];
