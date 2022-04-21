@@ -6,7 +6,7 @@ import Circles from "./Circles/Circles";
 function App() {
     return (
         <Fragment>
-            <Circles />
+            {/* <Circles /> */}
             {/* <BarChart /> */}
             <AntsChart />
         </Fragment>
