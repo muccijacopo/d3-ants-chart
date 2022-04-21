@@ -1,7 +1,8 @@
 export interface Ant {
     antennaeLength: number;
-    bodySize: number;
     legsLength: number;
+    headSize: number;
+    bodySize: number;
 }
 
 export type AntDataset = Ant[];
