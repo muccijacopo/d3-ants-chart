@@ -4,7 +4,7 @@ const randomBetween = (min: number, max: number) => Number((Math.random() * (max
 
 export function generateDataset (): AntDataset {
    const dataset = Array(numberOfAnts).fill(0).map(_ => ({
-    legsLength: randomBetween(10, 30),
+    legsLength: randomBetween(10, 14),
     antennaeLength: randomBetween(10, 30),
     bodySize: randomBetween(10, 12),
     headSize: randomBetween(6, 10),

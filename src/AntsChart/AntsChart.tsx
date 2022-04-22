@@ -9,9 +9,13 @@ interface PositionAttribute {
     y: keyof Ant;
 }
 
-const margin = {top: 30, right: 30, bottom: 70, left: 30},
-        width = window.innerWidth - margin.left - margin.right,
-        height = window.innerHeight - 100 - margin.top - margin.bottom
+const outerWidth = window.innerWidth;
+const outerHeight = window.innerHeight - 200;
+const margin = {top: 30, right: 30, bottom: 70, left: 30};
+const antMaxHeight = 100;
+const antMaxWidth = 25;
+const innerWidth = outerWidth - margin.left - margin.right - antMaxWidth;
+const innerHeight = outerHeight - margin.top - margin.bottom - antMaxHeight;
 
 const translate = (x: number, y: number) => `translate(${x}, ${y})`;
 
@@ -27,15 +31,12 @@ function AntsChart() {
     function initializeChart () {
         console.log("initializeChart")
         const svg = d3.select(ref.current)
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom);
+            .attr("width", outerWidth)
+            .attr("height", outerHeight);
 
-        const chart = d3.select(ref.current).select(".chart");
-        svg.append("g").attr("class", "chart")
-        if (!chart) {
-
-        }
-        chart.attr("transform", translate(margin.left / 2, margin.top));
+        svg.append("g")
+            .attr("transform", translate(margin.left, margin.top))
+            .attr("class", "ants-chart-svg-g")
     }
 
     useEffect(() => {
@@ -49,7 +50,8 @@ function AntsChart() {
 
 
     function updateChart () {
-        const svg = d3.select(ref.current).select(".chart");
+        const svg = d3.select(ref.current).select(".ants-chart-svg-g");
+        console.log(svg)
         if (!svg || !dataset.length) return;
 
 
@@ -63,17 +65,17 @@ function AntsChart() {
         const xScale = d3
             .scaleLinear()
             .domain([minOf(dataset, positionAttribute.x), maxOf(dataset, positionAttribute.x)])
-            .range([margin.left + margin.right, width - margin.left - margin.right])
+            .range([0, innerWidth])
 
         const xAxis = d3.axisBottom(xScale);
         svg
             .append("g")
-            .attr("transform", translate(0, height - 20))
+            .attr("transform", translate(0, innerHeight))
             .attr('class', 'xAxis')
             .call(xAxis);
         svg
             .append('text')
-            .attr("transform", translate(width/2, height))
+            .attr("transform", translate(innerWidth / 2, innerHeight + 30))
             .style("text-anchor", "middle")
             .attr('class', 'xAxis-label')
             .text(positionAttribute.x)
@@ -82,11 +84,11 @@ function AntsChart() {
         const yScale = d3
             .scaleLinear()
             .domain([minOf(dataset, positionAttribute.y), maxOf(dataset, positionAttribute.y)])
-            .range([height - margin.bottom - margin.top - 100, 0])
+            .range([innerHeight, 0])
         const yAxis = d3.axisLeft(yScale);
         svg
             .append("g")
-            .attr("transform", translate(margin.left, 0))
+            .attr("transform", translate(margin.left - 10, 0))
             .attr('class', 'yAxis')
             .call(yAxis);
 
@@ -95,14 +97,25 @@ function AntsChart() {
         .attr("transform", translate(margin.left, 20))
         .attr('class', 'yAxis-label')
         .text(positionAttribute.y)
+
+
+        // const ants = svg
+        //     .selectAll('.ant')
+        //     .data(dataset)
+        //     .enter()
+        //     .append("g")
+        //     .attr("class", "ant");
+
+        // console.log(ants)
         
-        const antHeads = svg.selectAll('.ant.ant-head').data(dataset);
         // Head
-        antHeads.enter()
+        const antHeads = svg.selectAll('.ant.ant-head').data(dataset);
+        antHeads
+            .enter()
             .append('circle')
             .attr("fill", "black")
             .attr("class", "ant ant-head")
-        antHeads
+            antHeads
             .transition()
             .duration(1000)
             .attr('cx', d => xScale(d[positionAttribute.x]))
@@ -113,29 +126,31 @@ function AntsChart() {
         // Bodies
         antsBodies
             .enter()
-            .append('circle')
+            .append('ellipse')
             .attr("fill", "black")
             .attr("class", "ant ant-body")
         antsBodies
             .transition()
             .duration(1000)
             .attr('cx', d => xScale(d[positionAttribute.x]))
-            .attr('cy', d => yScale(d[positionAttribute.y]) + d.bodySize + (d.headSize / 2))
-            .attr("r", d => d.bodySize)
+            .attr('cy', d => yScale(d[positionAttribute.y]) + (d.headSize / 2) + d.bodySize)
+            .attr("rx", d => d.bodySize * 0.7)
+            .attr("ry", d => d.bodySize)
 
         // Backs
         const antBacks = svg.selectAll('.ant.ant-back').data(dataset);
             antBacks
                 .enter()
-                .append('circle')
+                .append('ellipse')
                 .attr("fill", "black")
                 .attr("class", "ant ant-back")
             antBacks
                 .transition()
                 .duration(1000)
                 .attr('cx', d => xScale(d[positionAttribute.x]))
-                .attr('cy', d => yScale(d[positionAttribute.y]) + d.headSize + d.bodySize + d.backSize)
-                .attr("r", d => d.backSize)
+                .attr('cy', d => yScale(d[positionAttribute.y]) + (d.headSize / 2) + d.bodySize + d.backSize * 2)
+                .attr('rx', d => d.backSize)
+                .attr('ry', d => d.backSize + 5)
 
         
         // Antennas
@@ -151,7 +166,7 @@ function AntsChart() {
             .transition()
             .duration(1000)
             .attr('x1', d => xScale(d[positionAttribute.x]))
-            .attr('x2', d => xScale(d[positionAttribute.x]) + 100)
+            .attr('x2', d => xScale(d[positionAttribute.x]) + 6)
             .attr('y1', d => yScale(d[positionAttribute.y]))
             .attr('y2', d => yScale(d[positionAttribute.y]) - d.antennaeLength)
         
@@ -184,7 +199,7 @@ function AntsChart() {
             .attr('x1', d => xScale(d[positionAttribute.x]))
             .attr('x2', d => xScale(d[positionAttribute.x]) - 10)
             .attr('y1', d => yScale(d[positionAttribute.y]) + (d.headSize / 2) + d.bodySize + d.backSize)
-            .attr('y2', d => yScale(d[positionAttribute.y]) + (d.headSize / 2) + d.bodySize + d.backSize + d.legsLength)
+            .attr('y2', d => yScale(d[positionAttribute.y]) + (d.headSize / 2) + d.bodySize + d.backSize + d.legsLength * 2)
 
         const antLegsSecond = svg.selectAll('.ant.ant-leg-2').data(dataset);
         antLegsSecond
@@ -199,7 +214,7 @@ function AntsChart() {
             .attr('x1', d => xScale(d[positionAttribute.x]))
             .attr('x2', d => xScale(d[positionAttribute.x]) + 10)
             .attr('y1', d => yScale(d[positionAttribute.y]) + (d.headSize / 2) + d.bodySize + d.backSize)
-            .attr('y2', d => yScale(d[positionAttribute.y]) + (d.headSize / 2) + d.bodySize + d.backSize + d.legsLength)
+            .attr('y2', d => yScale(d[positionAttribute.y]) + (d.headSize / 2) + d.bodySize + d.backSize + d.legsLength * 2)
 
         setEventListeners();
     }
@@ -250,7 +265,9 @@ function AntsChart() {
             <button
                 style={{ marginBottom: 20 }} 
                 onClick={() => setDataset(generateDataset())}>Refresh</button>
-            <svg id="ants-chart" ref={ref}></svg>
+            <svg id="ants-chart-svg" ref={ref}>
+
+            </svg>
         </div>
     )
 }
