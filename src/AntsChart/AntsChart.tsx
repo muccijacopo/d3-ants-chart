@@ -11,7 +11,7 @@ interface PositionAttribute {
 
 const margin = {top: 30, right: 30, bottom: 70, left: 30},
         width = window.innerWidth - margin.left - margin.right,
-        height = window.innerHeight - margin.top - margin.bottom
+        height = window.innerHeight - 100 - margin.top - margin.bottom
 
 const translate = (x: number, y: number) => `translate(${x}, ${y})`;
 
@@ -40,7 +40,7 @@ function AntsChart() {
 
     useEffect(() => {
         initializeChart();
-        // setDataset(generateDataset())
+        setDataset(generateDataset())
         // window.addEventListener('resize', () => {
         //     initializeChart();
         //     updateChart();
@@ -49,9 +49,8 @@ function AntsChart() {
 
 
     function updateChart () {
-        console.log("update")
         const svg = d3.select(ref.current).select(".chart");
-        if (!svg) return;
+        if (!svg || !dataset.length) return;
 
 
         // Remove previous scales
@@ -83,7 +82,7 @@ function AntsChart() {
         const yScale = d3
             .scaleLinear()
             .domain([minOf(dataset, positionAttribute.y), maxOf(dataset, positionAttribute.y)])
-            .range([height - margin.bottom - margin.top, 0])
+            .range([height - margin.bottom - margin.top - 100, 0])
         const yAxis = d3.axisLeft(yScale);
         svg
             .append("g")
@@ -152,7 +151,7 @@ function AntsChart() {
             .transition()
             .duration(1000)
             .attr('x1', d => xScale(d[positionAttribute.x]))
-            .attr('x2', d => xScale(d[positionAttribute.x]) + 6)
+            .attr('x2', d => xScale(d[positionAttribute.x]) + 100)
             .attr('y1', d => yScale(d[positionAttribute.y]))
             .attr('y2', d => yScale(d[positionAttribute.y]) - d.antennaeLength)
         
