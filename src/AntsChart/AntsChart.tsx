@@ -16,8 +16,15 @@ const antMaxHeight = 100;
 const antMaxWidth = 25;
 const innerWidth = outerWidth - margin.left - margin.right - antMaxWidth;
 const innerHeight = outerHeight - margin.top - margin.bottom - antMaxHeight;
+const antColor = '#262626';
 
 const translate = (x: number, y: number) => `translate(${x}, ${y})`;
+const listOfPoints = (list: { x: number, y: number}[]) => {
+    let a = "";
+    list.forEach(point => a = a.concat(`${point.x}, ${point.y} `));
+    console.log(a);
+    return a;
+}
 
 const maxOf = (dataset: AntDataset, key: keyof Ant) => d3.max((dataset.map(e => e[key]))) as number;
 const minOf = (dataset: AntDataset, key: keyof Ant) => d3.min((dataset.map(e => e[key]))) as number;
@@ -51,8 +58,9 @@ function AntsChart() {
 
     function updateChart () {
         const svg = d3.select(ref.current).select(".ants-chart-svg-g");
-        console.log(svg)
         if (!svg || !dataset.length) return;
+
+        console.log(dataset)
 
 
         // Remove previous scales
@@ -112,109 +120,158 @@ function AntsChart() {
         const antHeads = svg.selectAll('.ant.ant-head').data(dataset);
         antHeads
             .enter()
-            .append('circle')
-            .attr("fill", "black")
+            .append('ellipse')
+            .attr("fill", `${antColor}`)
             .attr("class", "ant ant-head")
             antHeads
             .transition()
             .duration(1000)
             .attr('cx', d => xScale(d[positionAttribute.x]))
             .attr('cy', d => yScale(d[positionAttribute.y]))
-            .attr("r", d => d.headSize)
+            .attr("rx", d => d.headSize * 0.7)
+            .attr("ry", d => d.headSize)
+
 
         const antsBodies = svg.selectAll('.ant.ant-body').data(dataset);
         // Bodies
         antsBodies
             .enter()
             .append('ellipse')
-            .attr("fill", "black")
+            .attr("fill", `${antColor}`)
             .attr("class", "ant ant-body")
         antsBodies
             .transition()
             .duration(1000)
             .attr('cx', d => xScale(d[positionAttribute.x]))
-            .attr('cy', d => yScale(d[positionAttribute.y]) + (d.headSize / 2) + d.bodySize)
+            .attr('cy', d => yScale(d[positionAttribute.y]) + d.headSize + d.bodySize)
             .attr("rx", d => d.bodySize * 0.7)
             .attr("ry", d => d.bodySize)
+
+         // Front legs
+         const frontLegs1 = svg.selectAll('.ant.ant-front-leg-1').data(dataset);
+         frontLegs1
+             .enter()
+             .append('polyline')
+             .attr('stroke', `${antColor}`)
+             .attr('stroke-width', '2')
+             .attr('fill', 'none')
+             .attr("class", "ant ant-front-leg-1")
+        frontLegs1
+             .transition()
+             .duration(1000)
+             .attr('points', d => listOfPoints(
+                 [
+                     { x: xScale(d[positionAttribute.x]), y: yScale(d[positionAttribute.y]) + d.headSize + d.bodySize },
+                     { x: xScale(d[positionAttribute.x]) + 15, y: yScale(d[positionAttribute.y]) + d.headSize + d.bodySize - d.bodySize * 0.5 },
+                     { x: xScale(d[positionAttribute.x]) + 15 + d.frontLegs, y: yScale(d[positionAttribute.y])   }
+                 ]
+             ))
+             const frontLegs2 = svg.selectAll('.ant.ant-front-leg-2').data(dataset);
+             frontLegs2
+                 .enter()
+                 .append('polyline')
+                 .attr('stroke', `${antColor}`)
+                 .attr('stroke-width', '2')
+                 .attr('fill', 'none')
+                 .attr("class", "ant ant-front-leg-2")
+            frontLegs2
+                 .transition()
+                 .duration(1000)
+                 .attr('points', d => listOfPoints(
+                     [
+                         { x: xScale(d[positionAttribute.x]), y: yScale(d[positionAttribute.y]) + d.headSize + d.bodySize },
+                         { x: xScale(d[positionAttribute.x]) - 15, y: yScale(d[positionAttribute.y]) + d.headSize + d.bodySize - d.bodySize * 0.5 },
+                         { x: xScale(d[positionAttribute.x]) - 15 - d.frontLegs, y: yScale(d[positionAttribute.y])   }
+                     ]
+                 ))
 
         // Backs
         const antBacks = svg.selectAll('.ant.ant-back').data(dataset);
             antBacks
                 .enter()
                 .append('ellipse')
-                .attr("fill", "black")
+                .attr("fill", `${antColor}`)
                 .attr("class", "ant ant-back")
             antBacks
                 .transition()
                 .duration(1000)
                 .attr('cx', d => xScale(d[positionAttribute.x]))
-                .attr('cy', d => yScale(d[positionAttribute.y]) + (d.headSize / 2) + d.bodySize + d.backSize * 2)
-                .attr('rx', d => d.backSize)
-                .attr('ry', d => d.backSize + 5)
+                .attr('cy', d => yScale(d[positionAttribute.y]) + d.headSize + (d.bodySize * 2) + d.backSize)
+                .attr('rx', d => d.backSize * 0.7)
+                .attr('ry', d => d.backSize)
 
         
         // Antennas
         const antAntennasFirst = svg.selectAll('.ant.ant-antenna-1').data(dataset);
         antAntennasFirst
             .enter()
-            .append('line')
-            .attr('stroke', 'black')
+            .append('polyline')
+            .attr('stroke', `${antColor}`)
             .attr('stroke-width', '2')
+            .attr('fill', 'none')
             .attr('class', "ant ant-antenna-1")
             
         antAntennasFirst
             .transition()
             .duration(1000)
-            .attr('x1', d => xScale(d[positionAttribute.x]))
-            .attr('x2', d => xScale(d[positionAttribute.x]) + 6)
-            .attr('y1', d => yScale(d[positionAttribute.y]))
-            .attr('y2', d => yScale(d[positionAttribute.y]) - d.antennaeLength)
+            .attr('points', d => listOfPoints(
+                [
+                    { x: xScale(d[positionAttribute.x]), y: yScale(d[positionAttribute.y]) - d.headSize * 0.4 },
+                    { x: xScale(d[positionAttribute.x]) + 15, y: yScale(d[positionAttribute.y]) - d.headSize * 0.7 },
+                    { x: xScale(d[positionAttribute.x]) + 10, y: yScale(d[positionAttribute.y]) - d.headSize - d.antennaeLength  }
+                ]
+            ))
         
         const antAntennasSecond = svg.selectAll('.ant.ant-antenna-2').data(dataset);
         antAntennasSecond
             .enter()
-            .append('line')
-            .attr('stroke', 'black')
+            .append('polyline')
+            .attr('stroke', `${antColor}`)
             .attr('stroke-width', '2')
+            .attr('fill', 'none')
             .attr("class", "ant ant-antenna-2")
         antAntennasSecond
             .transition()
             .duration(1000)
-            .attr('x1', d => xScale(d[positionAttribute.x]))
-            .attr('x2', d => xScale(d[positionAttribute.x]) - 6)
-            .attr('y1', d => yScale(d[positionAttribute.y]))
-            .attr('y2', d => yScale(d[positionAttribute.y]) - d.antennaeLength)
+            .attr('points', d => listOfPoints(
+                [
+                    { x: xScale(d[positionAttribute.x]), y: yScale(d[positionAttribute.y]) - d.headSize * 0.4 },
+                    { x: xScale(d[positionAttribute.x]) - 15, y: yScale(d[positionAttribute.y]) - d.headSize * 0.7  },
+                    { x: xScale(d[positionAttribute.x]) - 10, y: yScale(d[positionAttribute.y]) - d.headSize - d.antennaeLength  }
+                ]
+            ))
 
 
         const antLegsFirst = svg.selectAll('.ant.ant-leg-1').data(dataset);
         antLegsFirst
             .enter()
             .append('line')
-            .attr('stroke', 'black')
+            .attr('stroke', `${antColor}`)
             .attr('stroke-width', '2')
             .attr('class', "ant ant-leg-1")
+        
         antLegsFirst
             .transition()
             .duration(1000)
             .attr('x1', d => xScale(d[positionAttribute.x]))
-            .attr('x2', d => xScale(d[positionAttribute.x]) - 10)
-            .attr('y1', d => yScale(d[positionAttribute.y]) + (d.headSize / 2) + d.bodySize + d.backSize)
-            .attr('y2', d => yScale(d[positionAttribute.y]) + (d.headSize / 2) + d.bodySize + d.backSize + d.legsLength * 2)
+            .attr('x2', d => xScale(d[positionAttribute.x]) - d.legsLength)
+            .attr('y1', d => yScale(d[positionAttribute.y]) + d.headSize + (d.bodySize * 2) + d.backSize)
+            .attr('y2', d => yScale(d[positionAttribute.y]) + d.headSize + (d.bodySize * 2) + d.backSize + d.legsLength)
 
         const antLegsSecond = svg.selectAll('.ant.ant-leg-2').data(dataset);
         antLegsSecond
             .enter()
             .append('line')
-            .attr('stroke', 'black')
+            .attr('stroke', `${antColor}`)
             .attr('stroke-width', '2')
             .attr('class', "ant ant-leg-2")
         antLegsSecond
             .transition()
             .duration(1000)
             .attr('x1', d => xScale(d[positionAttribute.x]))
-            .attr('x2', d => xScale(d[positionAttribute.x]) + 10)
-            .attr('y1', d => yScale(d[positionAttribute.y]) + (d.headSize / 2) + d.bodySize + d.backSize)
-            .attr('y2', d => yScale(d[positionAttribute.y]) + (d.headSize / 2) + d.bodySize + d.backSize + d.legsLength * 2)
+            .attr('x2', d => xScale(d[positionAttribute.x]) + d.legsLength)
+            .attr('y1', d => yScale(d[positionAttribute.y]) +  d.headSize + (d.bodySize * 2) + d.backSize)
+            .attr('y2', d => yScale(d[positionAttribute.y]) +  d.headSize + (d.bodySize * 2) + d.backSize + d.legsLength)
 
         setEventListeners();
     }
