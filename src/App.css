@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+
+body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 1rem;
+    --text-color: #252525;
+    --selection-color: #ddd040;
+}
+
+.xAxis-label, .yAxis-label {
+    font-weight: bold;
+}
+
+.xAxis > * > *, .yAxis > * > * {
+    stroke: var(--text-color);
+}
+
+.ant {
+    cursor: pointer;
+}
+
+polyline:hover, line:hover {
+    stroke: var(--selection-color);
+}
+
+circle:hover, ellipse:hover {
+    fill: var(--selection-color);
+}

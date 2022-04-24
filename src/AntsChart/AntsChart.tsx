@@ -9,9 +9,9 @@ interface PositionAttribute {
     y: keyof Ant;
 }
 
-const outerWidth = window.innerWidth;
-const outerHeight = window.innerHeight - 200;
-const margin = {top: 30, right: 30, bottom: 70, left: 30};
+const margin = {top: 20, right: 0, bottom: 20, left: 20};
+const outerWidth = window.innerWidth - 30;
+const outerHeight = window.innerHeight - 50;
 const antMaxHeight = 100;
 const antMaxWidth = 25;
 const innerWidth = outerWidth - margin.left - margin.right - antMaxWidth;
@@ -38,9 +38,10 @@ function AntsChart() {
     function initializeChart () {
         console.log("initializeChart")
         const svg = d3.select(ref.current)
-            .attr("width", outerWidth)
+            .attr("width", outerWidth - margin.left)
             .attr("height", outerHeight);
 
+        console.log(window.innerWidth)
         svg.append("g")
             .attr("transform", translate(margin.left, margin.top))
             .attr("class", "ants-chart-svg-g")
