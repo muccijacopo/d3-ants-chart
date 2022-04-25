@@ -1,6 +1,7 @@
 export interface Ant {
     antennaeLength: number;
-    frontLegs: number;
+    frontLegsLength: number;
+    middleLegsLength: number;
     legsLength: number;
     headSize: number;
     bodySize: number;
