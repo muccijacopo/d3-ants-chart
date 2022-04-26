@@ -3,6 +3,10 @@ header {
     width: 100%;
 }
 
+header h1 {
+    cursor: pointer;
+}
+
 .xAxis-label, .yAxis-label {
     font-weight: bold;
 }
@@ -41,7 +45,7 @@ button:hover {
 
 .card {
     background: white;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     width: 100%;
     max-width: 1200px;
     height: 650px;
