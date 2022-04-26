@@ -175,7 +175,7 @@ function AntsChart() {
             .duration(transitionDuration)
             .attr('cx', d => xScale(getAntValue(d, 'x')))
             .attr('cy', d => yScale(d[getVariabileByFeature('y')]))
-            .attr("rx", d => d[getVariabileByFeature('bodySize')])
+            .attr("rx", d => d[getVariabileByFeature('bodySize')] *0.8)
             .attr("ry", d => d[getVariabileByFeature('bodySize')])
 
 
@@ -191,7 +191,7 @@ function AntsChart() {
               .duration(transitionDuration)
               .attr('cx', d => xScale(getAntValue(d, 'x')))
               .attr('cy', d => yScale(d[getVariabileByFeature('y')]) - getAntValue(d, 'bodySize') - getAntValue(d, 'headSize'))
-              .attr("rx", d => getAntValue(d, 'headSize'))
+              .attr("rx", d => getAntValue(d, 'headSize') * 0.7)
               .attr("ry", d => getAntValue(d, 'headSize'))
 
          // Front legs
@@ -216,8 +216,8 @@ function AntsChart() {
              .attr('points', d => listOfPoints(
                  [
                      { x: xScale(getAntValue(d, 'x')), y: yScale(getAntValue(d, 'y')) },
-                     { x: xScale(getAntValue(d, 'x')) + 15, y: yScale(getAntValue(d, 'y')) - 5 },
-                     { x: xScale(getAntValue(d, 'x')) + 15 + getAntValue(d, 'legsLength'), y: yScale(getAntValue(d, 'y')) - 5 - getAntValue(d, 'legsLength')   }
+                     { x: xScale(getAntValue(d, 'x')) + 15, y: yScale(getAntValue(d, 'y')) - 10 },
+                     { x: xScale(getAntValue(d, 'x')) + 20, y: yScale(getAntValue(d, 'y')) - 10 - getAntValue(d, 'legsLength')   }
                  ]
              ))
         const frontLegs2 = svg.selectAll('.ant.ant-front-leg-2').data(dataset);
@@ -241,8 +241,8 @@ function AntsChart() {
             .attr('points', d => listOfPoints(
                 [
                     { x: xScale(getAntValue(d, 'x')), y: yScale(getAntValue(d, 'y')) },
-                    { x: xScale(getAntValue(d, 'x')) - 15, y: yScale(getAntValue(d, 'y')) - 5 },
-                    { x: xScale(getAntValue(d, 'x')) - 15 - getAntValue(d, 'legsLength'), y: yScale(getAntValue(d, 'y')) - 5 - getAntValue(d, 'legsLength')   }
+                    { x: xScale(getAntValue(d, 'x')) - 15, y: yScale(getAntValue(d, 'y')) - 10 },
+                    { x: xScale(getAntValue(d, 'x')) - 20, y: yScale(getAntValue(d, 'y')) - 10 - getAntValue(d, 'legsLength')   }
                 ]
             ))
 
@@ -312,7 +312,7 @@ function AntsChart() {
                 .duration(transitionDuration)
                 .attr('cx', d => xScale(getAntValue(d, 'x')))
                 .attr('cy', d => yScale(getAntValue(d, 'y')) + getAntValue(d, 'bodySize') * 2)
-                .attr('rx', d => getAntValue(d, 'bodySize'))
+                .attr('rx', d => getAntValue(d, 'bodySize') * 0.8)
                 .attr('ry', d => getAntValue(d, 'bodySize'))
 
         
