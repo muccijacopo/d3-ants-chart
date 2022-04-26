@@ -47,6 +47,8 @@ const transitionDuration = 800;
 
 function AntsChart() {
 
+    /** State */
+
     const [dataset, setDataset] = useState<AntDataset>([])
     const [feature2Variable, setFeature2Variable] = useState<FeatureToVariabile>(
         { 
@@ -57,12 +59,34 @@ function AntsChart() {
             headSize: 'v5',
             bodySize: 'v6'
     });
-    const [resize, setResize] = useState(null);
-
+    const [resize, setResize] = useState(window.innerWidth);
     const SVGRef = useRef(null);
+
+    /** Effects */
+
+    useEffect(() => {
+        initializeChart();
+        updateChart();
+        window.addEventListener('resize', () => setResize(window.innerWidth));
+    }, []);
+
+    useEffect(() => {
+        initializeChart();
+        updateChart();
+    }, [resize])
+
+    useEffect(() => {
+        updateChart();
+    }, [dataset, feature2Variable]);
+
+    /** Utility functions */
 
     function getVariabileByFeature (feat: keyof FeatureToVariabile): keyof Ant {
         return feature2Variable[feat] as keyof Ant
+    }
+
+    function getAntValue (ant: Ant, feat: keyof FeatureToVariabile) {
+        return ant[getVariabileByFeature(feat)];
     }
 
     function isReady() {
@@ -74,11 +98,14 @@ function AntsChart() {
         const card = document.querySelector(".card")!;
         const outerWidth = card.getBoundingClientRect().width;
         const outerHeight = card.getBoundingClientRect().height;
-        const margin = {top: 50, right: 50, bottom: 50, left: 25};
+        const margin = {top: 50, right: 50, bottom: 50, left: 50 };
         const innerWidth = outerWidth - margin.left - margin.right;
         const innerHeight = outerHeight - margin.top - margin.bottom;
         return { outerHeight, outerWidth, margin, innerWidth, innerHeight}
     }
+
+
+    /** Chart  */
 
     function initializeChart () {
         if (isReady()) {
@@ -87,37 +114,19 @@ function AntsChart() {
                 .attr("width", outerWidth)
                 .attr("height", outerHeight);
 
-
-            const chart = svg.select("g");
-            if (!chart) {
-                svg.append("g")
+            const chart = svg.select("g").node();
+            if (!chart) svg.append("g").attr("class", "ants-chart-svg-g")
+            svg.select("g")
                 .attr("transform", translate(margin.left, margin.top))
-                .attr("class", "ants-chart-svg-g")
-            }
+                .attr("width", outerWidth)
+                .attr("height", outerHeight);
         }
     }
 
-    useEffect(() => {
-        initializeChart();
-        setDataset(generateDataset())
-        window.addEventListener('resize', () => {
-            initializeChart();
-            updateChart();
-        });
-    }, []);
-
-    function getAntValue (ant: Ant, feat: keyof FeatureToVariabile) {
-        return ant[getVariabileByFeature(feat)];
-    }
-
-
     function updateChart () {
-        const svg = d3.select(SVGRef.current).select('.ants-chart-svg-g')
+        const svg = d3.select(SVGRef.current).select(".ants-chart-svg-g")
         if (!svg || !dataset.length || !isReady()) return;
-
         const { margin, innerWidth, innerHeight } = getDimensions();
-
-        console.log(feature2Variable)
 
 
         // Remove previous scales
@@ -125,8 +134,6 @@ function AntsChart() {
         svg.select('.xAxis-label').remove();
         svg.select('.yAxis').remove();
         svg.select('.yAxis-label').remove();
-
-        console.log(minOf(dataset, getVariabileByFeature('x')))
 
         /** X Axis */
         const xScale = d3
@@ -161,7 +168,7 @@ function AntsChart() {
 
         svg
         .append('text')
-        .attr("transform", translate(margin.left, 20))
+        .attr("transform", translate(-10, -20))
         .attr('class', 'yAxis-label')
         .text(feature2Variable.y)
 
@@ -275,7 +282,7 @@ function AntsChart() {
                     [
                         { x: xScale(getAntValue(d, 'x')), y: yScale(getAntValue(d, 'y')) },
                         { x: xScale(getAntValue(d, 'x')) + 15, y: yScale(getAntValue(d, 'y')) },
-                        { x: xScale(getAntValue(d, 'x')) + 15 + getAntValue(d, 'legsLength'), y: yScale(getAntValue(d, 'y')) + getAntValue(d, 'legsLength') },
+                        { x: xScale(getAntValue(d, 'x')) + 15 + getAntValue(d, 'legsLength'), y: yScale(getAntValue(d, 'y')) - getAntValue(d, 'legsLength') },
                     ]
                 ))
         const middleLegs2 = svg.selectAll('.ant.ant-middle-leg-2').data(dataset);
@@ -300,7 +307,7 @@ function AntsChart() {
                 [
                     { x: xScale(getAntValue(d, 'x')), y: yScale(getAntValue(d, 'y')) },
                     { x: xScale(getAntValue(d, 'x')) - 15, y: yScale(getAntValue(d, 'y')) },
-                    { x: xScale(getAntValue(d, 'x')) - 15 - getAntValue(d, 'legsLength'), y: yScale(getAntValue(d, 'y')) + getAntValue(d, 'legsLength') },
+                    { x: xScale(getAntValue(d, 'x')) - 15 - getAntValue(d, 'legsLength'), y: yScale(getAntValue(d, 'y')) - getAntValue(d, 'legsLength') },
                 ]
             ))
 
@@ -428,6 +435,19 @@ function AntsChart() {
         setEventListeners();
     }
 
+    /** Sets all events listeners */
+    function setEventListeners () {
+        setEventListenerOn('ant-antenna-1');
+        setEventListenerOn('ant-antenna-2');
+        setEventListenerOn('ant-head');
+        setEventListenerOn('ant-front-leg-1');
+        setEventListenerOn('ant-front-leg-2');
+        setEventListenerOn('ant-middle-leg-1');
+        setEventListenerOn('ant-middle-leg-2');
+        setEventListenerOn('ant-leg-1');
+        setEventListenerOn('ant-leg-2');
+    }
+
     function setEventListenerOn(key: string) {
         const prop = getPropertyByKey(key);
         if (!prop) return;
@@ -444,26 +464,9 @@ function AntsChart() {
         });
     }
 
-    /** Sets all events listeners */
-    function setEventListeners () {
-        setEventListenerOn('ant-antenna-1');
-        setEventListenerOn('ant-antenna-2');
-        setEventListenerOn('ant-head');
-        setEventListenerOn('ant-front-leg-1');
-        setEventListenerOn('ant-front-leg-2');
-        setEventListenerOn('ant-middle-leg-1');
-        setEventListenerOn('ant-middle-leg-2');
-        setEventListenerOn('ant-leg-1');
-        setEventListenerOn('ant-leg-2');
-    }
-
-    useEffect(() => {
-        updateChart();
-    }, [dataset, feature2Variable]);
-
 
     return (
-        <div onContextMenu={e => e.preventDefault()}>
+        <Fragment>
             <header>
                 <h1>🐜 Ant Visualization Chart</h1>
                 <button
@@ -473,10 +476,12 @@ function AntsChart() {
                     style={{ marginBottom: 20 }} 
                     onClick={() => setDataset(generateDataset())}>Random</button>
             </header>
-                <div className="card">
+            <div className="container">
+                <div className="card" onContextMenu={e => e.preventDefault()}>
                     <svg id="ants-chart-svg" ref={SVGRef}></svg>
                 </div>
-        </div>
+            </div>
+        </Fragment>
     )
 }
 
