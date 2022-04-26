@@ -57,6 +57,7 @@ function AntsChart() {
             headSize: 'v5',
             bodySize: 'v6'
     });
+    const [resize, setResize] = useState(null);
 
     const SVGRef = useRef(null);
 
@@ -85,20 +86,24 @@ function AntsChart() {
             const svg = d3.select(SVGRef.current)
                 .attr("width", outerWidth)
                 .attr("height", outerHeight);
-    
-            svg.append("g")
+
+
+            const chart = svg.select("g");
+            if (!chart) {
+                svg.append("g")
                 .attr("transform", translate(margin.left, margin.top))
                 .attr("class", "ants-chart-svg-g")
+            }
         }
     }
 
     useEffect(() => {
         initializeChart();
         setDataset(generateDataset())
-        // window.addEventListener('resize', () => {
-        //     initializeChart();
-        //     updateChart();
-        // });
+        window.addEventListener('resize', () => {
+            initializeChart();
+            updateChart();
+        });
     }, []);
 
     function getAntValue (ant: Ant, feat: keyof FeatureToVariabile) {
