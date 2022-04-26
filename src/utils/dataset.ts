@@ -31,3 +31,15 @@ const KEY_TO_PROPERTY_MAP: { [key: string]: keyof FeatureToVariabile } = {
 }
 
 export const getPropertyByKey = (key: string) => KEY_TO_PROPERTY_MAP[key];
+
+export function isDatasetValid (dataset: Object)  {
+   if (!Array.isArray(dataset)) return false;
+   else {
+      return dataset.every(e => {
+         for (let v of ["v1", "v2", "v3", "v4", "v5", "v6"]) {
+            if (typeof(e?.[v]) != 'number') return false;
+         }
+         return true;
+      })
+   }
+}

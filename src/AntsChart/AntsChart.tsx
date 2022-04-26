@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { Fragment, useEffect, useRef, useState } from "react";
 
-import { generateDataset, getPropertyByKey } from "../utils/dataset";
+import { generateDataset, getPropertyByKey, isDatasetValid } from "../utils/dataset";
 import { Ant, AntDataset } from "./DatasetModel";
 import './AntsChart.css';
 
@@ -61,6 +61,7 @@ function AntsChart() {
     });
     const [resize, setResize] = useState(window.innerWidth);
     const SVGRef = useRef(null);
+    const fileUploadRef = useRef(null);
 
     /** Effects */
 
@@ -127,7 +128,7 @@ function AntsChart() {
         const svg = d3.select(SVGRef.current).select(".ants-chart-svg-g")
         if (!svg || !dataset.length || !isReady()) return;
         const { margin, innerWidth, innerHeight } = getDimensions();
-
+        
 
         // Remove previous scales
         svg.select('.xAxis').remove();
@@ -464,6 +465,38 @@ function AntsChart() {
         });
     }
 
+    function onFileUploadButtonClick () {
+        (fileUploadRef.current as any).click();
+    }
+
+    function handleFileUpload (evt: any) {
+        const file = evt.target.files[0];
+
+        let reader = new FileReader();
+        reader.readAsText(file);
+
+        const cleanUp = () => {
+            (fileUploadRef.current as any).value = "";
+        }
+
+        reader.onload = () => {
+            try {
+                const dataset = JSON.parse(reader.result as string);
+                console.log(isDatasetValid(dataset));
+                if (isDatasetValid(dataset)) setDataset(dataset);                
+                cleanUp();
+            } catch {
+                console.error("Error during file parsing");
+                cleanUp();
+            }
+        }
+
+        reader.onerror = () => {
+            console.error("Error during file upload");
+            cleanUp();
+        }
+    }
+
 
     return (
         <Fragment>
@@ -471,7 +504,8 @@ function AntsChart() {
                 <h1>🐜 Ant Visualization Chart</h1>
                 <button
                     style={{ marginBottom: 20, marginRight: 10 }} 
-                    onClick={() => console.log("From file")}>From file</button>
+                    onClick={onFileUploadButtonClick}>From file</button>
+                    <input type="file" style={{ display: 'none'}} ref={fileUploadRef} onChange={handleFileUpload}/>
                 <button
                     style={{ marginBottom: 20 }} 
                     onClick={() => setDataset(generateDataset())}>Random</button>
