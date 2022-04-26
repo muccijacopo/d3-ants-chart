@@ -436,7 +436,9 @@ function AntsChart() {
         setEventListeners();
     }
 
-    /** Sets all events listeners */
+    /** Sets all events listeners
+     * @todo refactor autoevent listeners subscriber without listing all keys
+     */
     function setEventListeners () {
         setEventListenerOn('ant-antenna-1');
         setEventListenerOn('ant-antenna-2');
@@ -445,6 +447,8 @@ function AntsChart() {
         setEventListenerOn('ant-front-leg-2');
         setEventListenerOn('ant-middle-leg-1');
         setEventListenerOn('ant-middle-leg-2');
+        setEventListenerOn('ant-back');
+        setEventListenerOn('ant-body');
         setEventListenerOn('ant-leg-1');
         setEventListenerOn('ant-leg-2');
     }
@@ -456,6 +460,7 @@ function AntsChart() {
         d3.selectAll('.' + key).on('click', () => {
             const currentXVariable = feature2Variable.x;
             const newXVariable = getVariabileByFeature(prop as any);
+            console.log(currentXVariable, newXVariable)
             setFeature2Variable({ ...feature2Variable, x: newXVariable, [prop]: currentXVariable })
         });
         d3.selectAll("."+ key).on('contextmenu', () => {
@@ -504,11 +509,11 @@ function AntsChart() {
                 <h1>🐜 Ant Visualization Chart</h1>
                 <button
                     style={{ marginBottom: 20, marginRight: 10 }} 
-                    onClick={onFileUploadButtonClick}>From file</button>
+                    onClick={onFileUploadButtonClick}>From file (.JSON)</button>
                     <input type="file" style={{ display: 'none'}} ref={fileUploadRef} onChange={handleFileUpload}/>
                 <button
                     style={{ marginBottom: 20 }} 
-                    onClick={() => setDataset(generateDataset())}>Random</button>
+                    onClick={() => setDataset(generateDataset())}>Random data</button>
             </header>
             <div className="container">
                 <div className="card" onContextMenu={e => e.preventDefault()}>
