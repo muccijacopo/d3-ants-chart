@@ -23,9 +23,6 @@ polyline:hover, line:hover {
     stroke: var(--selection-color);
 }
 
-circle:hover, ellipse:hover {
-    fill: var(--selection-color);
-}
 
 button {
     border: none;
