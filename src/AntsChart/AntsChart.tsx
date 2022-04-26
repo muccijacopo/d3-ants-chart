@@ -58,7 +58,7 @@ function AntsChart() {
             bodySize: 'v6'
     });
 
-    const ref = useRef(null);
+    const SVGRef = useRef(null);
 
     function getVariabileByFeature (feat: keyof FeatureToVariabile): keyof Ant {
         return feature2Variable[feat] as keyof Ant
@@ -82,7 +82,7 @@ function AntsChart() {
     function initializeChart () {
         if (isReady()) {
             const { outerWidth, outerHeight, margin } = getDimensions();
-            const svg = d3.select(ref.current)
+            const svg = d3.select(SVGRef.current)
                 .attr("width", outerWidth)
                 .attr("height", outerHeight);
     
@@ -107,7 +107,7 @@ function AntsChart() {
 
 
     function updateChart () {
-        const svg = d3.select(ref.current).select('.ants-chart-svg-g')
+        const svg = d3.select(SVGRef.current).select('.ants-chart-svg-g')
         if (!svg || !dataset.length || !isReady()) return;
 
         const { margin, innerWidth, innerHeight } = getDimensions();
@@ -120,6 +120,8 @@ function AntsChart() {
         svg.select('.xAxis-label').remove();
         svg.select('.yAxis').remove();
         svg.select('.yAxis-label').remove();
+
+        console.log(minOf(dataset, getVariabileByFeature('x')))
 
         /** X Axis */
         const xScale = d3
@@ -148,7 +150,7 @@ function AntsChart() {
         const yAxis = d3.axisLeft(yScale);
         svg
             .append("g")
-            .attr("transform", translate(margin.left, 0))
+            .attr("transform", translate(0, 0))
             .attr('class', 'yAxis')
             .call(yAxis);
 
@@ -171,7 +173,7 @@ function AntsChart() {
         antsBodies
             .transition()
             .duration(transitionDuration)
-            .attr('cx', d => xScale(d[getVariabileByFeature('x')]))
+            .attr('cx', d => xScale(getAntValue(d, 'x')))
             .attr('cy', d => yScale(d[getVariabileByFeature('y')]))
             .attr("rx", d => d[getVariabileByFeature('bodySize')])
             .attr("ry", d => d[getVariabileByFeature('bodySize')])
@@ -187,7 +189,7 @@ function AntsChart() {
               antHeads
               .transition()
               .duration(transitionDuration)
-              .attr('cx', d => xScale(d[getVariabileByFeature('x')]))
+              .attr('cx', d => xScale(getAntValue(d, 'x')))
               .attr('cy', d => yScale(d[getVariabileByFeature('y')]) - getAntValue(d, 'bodySize') - getAntValue(d, 'headSize'))
               .attr("rx", d => getAntValue(d, 'headSize'))
               .attr("ry", d => getAntValue(d, 'headSize'))
@@ -201,6 +203,13 @@ function AntsChart() {
              .attr('stroke-width', '2')
              .attr('fill', 'none')
              .attr("class", "ant ant-front-leg-1")
+             .attr('points', d => listOfPoints(
+                [
+                    { x: 0, y: 0 },
+                    { x: 0, y: 0 },
+                    { x: 0, y: 0 },
+                ]
+            ))
         frontLegs1
              .transition()
              .duration(transitionDuration)
@@ -219,6 +228,13 @@ function AntsChart() {
             .attr('stroke-width', '2')
             .attr('fill', 'none')
             .attr("class", "ant ant-front-leg-2")
+            .attr('points', d => listOfPoints(
+                [
+                    { x: 0, y: 0 },
+                    { x: 0, y: 0 },
+                    { x: 0, y: 0 },
+                ]
+            ))
     frontLegs2
             .transition()
             .duration(transitionDuration)
@@ -240,6 +256,13 @@ function AntsChart() {
             .attr('stroke-width', '2')
             .attr('fill', 'none')
             .attr("class", "ant ant-middle-leg-1")
+            .attr('points', d => listOfPoints(
+                [
+                    { x: 0, y: 0 },
+                    { x: 0, y: 0 },
+                    { x: 0, y: 0 },
+                ]
+            ))
         middleLegs1
                 .transition()
                 .duration(transitionDuration)
@@ -258,6 +281,13 @@ function AntsChart() {
             .attr('stroke-width', '2')
             .attr('fill', 'none')
             .attr("class", "ant ant-middle-leg-2")
+            .attr('points', d => listOfPoints(
+                [
+                    { x: 0, y: 0 },
+                    { x: 0, y: 0 },
+                    { x: 0, y: 0 },
+                ]
+            ))
         middleLegs2
             .transition()
             .duration(transitionDuration)
@@ -295,6 +325,12 @@ function AntsChart() {
             .attr('stroke-width', '2')
             .attr('fill', 'none')
             .attr('class', "ant ant-antenna-1")
+            .attr('points', d => listOfPoints(
+                [
+                    { x: 0, y: 0 },
+                    { x: 0, y: 0 },
+                ]
+            ))
             
         antAntennasFirst
             .transition()
@@ -314,6 +350,12 @@ function AntsChart() {
             .attr('stroke-width', '2')
             .attr('fill', 'none')
             .attr("class", "ant ant-antenna-2")
+            .attr('points', d => listOfPoints(
+                [
+                    { x: 0, y: 0 },
+                    { x: 0, y: 0 },
+                ]
+            ))
         antAntennasSecond
             .transition()
             .duration(transitionDuration)
@@ -333,6 +375,13 @@ function AntsChart() {
             .attr('stroke-width', '2')
             .attr('fill', 'none')
             .attr('class', "ant ant-leg-1")
+            .attr('points', d => listOfPoints(
+                [
+                    { x: 0, y: 0 },
+                    { x: 0, y: 0 },
+                    { x: 0, y: 0 },
+                ]
+            ))
         
         antLegsFirst
             .transition()
@@ -353,6 +402,13 @@ function AntsChart() {
             .attr('stroke-width', '2')
             .attr('fill', 'none')
             .attr('class', "ant ant-leg-2")
+            .attr('points', d => listOfPoints(
+                [
+                    { x: 0, y: 0 },
+                    { x: 0, y: 0 },
+                    { x: 0, y: 0 },
+                ]
+            ))
         antLegsSecond
             .transition()
             .duration(transitionDuration)
@@ -413,7 +469,7 @@ function AntsChart() {
                     onClick={() => setDataset(generateDataset())}>Random</button>
             </header>
                 <div className="card">
-                    <svg id="ants-chart-svg" ref={ref}></svg>
+                    <svg id="ants-chart-svg" ref={SVGRef}></svg>
                 </div>
         </div>
     )

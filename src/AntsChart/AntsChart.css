@@ -1,3 +1,47 @@
 header {
     text-align: center;
 }
+
+.xAxis-label, .yAxis-label {
+    
+}
+
+.xAxis > * > *, .yAxis > * > *, .xAxis path, .yAxis path {
+    stroke: #292929;
+}
+
+.ant {
+    cursor: pointer;
+}
+
+polyline:hover, line:hover {
+    stroke: var(--selection-color);
+}
+
+circle:hover, ellipse:hover {
+    fill: var(--selection-color);
+}
+
+button {
+    border: none;
+    background-color: var(--text-color);
+    color: white;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+button:hover {
+    filter: brightness(120%);
+}
+
+.card {
+    background: var(--background-color);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+    width: 100%;
+    max-width: 1200px;
+    /* height: 100%; */
+    height: 650px;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 0 auto;
+}
