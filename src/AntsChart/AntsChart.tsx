@@ -3,6 +3,7 @@ import { Fragment, useEffect, useRef, useState } from "react";
 
 import { generateDataset, getPropertyByKey } from "../utils/dataset";
 import { Ant, AntDataset } from "./DatasetModel";
+import './AntsChart.css';
 
 interface PositionAttribute {
     x: keyof Ant;
@@ -359,13 +360,15 @@ function AntsChart() {
 
     return (
         <div onContextMenu={e => e.preventDefault()}>
-            <h1>Ant Visualization Chart</h1>
-            <button
-                style={{ marginBottom: 20, marginRight: 10 }} 
-                onClick={() => console.log("From file")}>From file</button>
-            <button
-                style={{ marginBottom: 20 }} 
-                onClick={() => setDataset(generateDataset())}>Random</button>
+            <header>
+                <h1>🐜 Ant Visualization Chart</h1>
+                <button
+                    style={{ marginBottom: 20, marginRight: 10 }} 
+                    onClick={() => console.log("From file")}>From file</button>
+                <button
+                    style={{ marginBottom: 20 }} 
+                    onClick={() => setDataset(generateDataset())}>Random</button>
+            </header>
                 <div className="card">
                     <svg id="ants-chart-svg" ref={ref}></svg>
                 </div>
