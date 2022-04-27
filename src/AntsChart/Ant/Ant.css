@@ -1,0 +1,22 @@
+
+.ant > circle:hover, ellipse:hover {
+    fill: var(--selection-color);
+    cursor: pointer;
+}
+
+.ant > path:hover {
+    stroke: var(--selection-color);
+    cursor: pointer;
+}
+
+.ant > circle, ellipse {
+    fill: var(--text-color);   
+    transition: all 0.3s;
+}
+
+.ant > path {
+    stroke: var(--text-color);
+    stroke-width: 2;
+    fill: none;
+    transition: all 0.3s;
+}
