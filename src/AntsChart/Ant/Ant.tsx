@@ -15,8 +15,13 @@ export interface Props {
 
 function AntSVG(props: Props) {
 
-    function path(l: any) {
-        return d3.line()(l)!;
+    function path(points: any) {
+        return d3.line()(points)!;
+    }
+
+    function line(points: any) {
+        const line = d3.line().curve(d3.curveNatural);
+        return line(points)!;
     }
 
     const { x, y, antennaeLength, bodySize, legsLength, headSize } = props;
@@ -26,11 +31,11 @@ function AntSVG(props: Props) {
             <g className='ant' onClick={props.onLeftClick} onContextMenu={props.onRightClick}>
                 <path
                     className="ant-antenna-1"
-                    d={path([[x, y - bodySize - headSize], [x - antennaeLength * 2, y - bodySize - antennaeLength * 2]])}
+                    d={line([[x, y - bodySize - headSize], [x - 10, y - bodySize - headSize - antennaeLength], [x - 5, y - bodySize - headSize - antennaeLength - 10]])}
                 ></path>
                 <path
                     className="ant-antenna-2"
-                    d={path([[x, y - bodySize - headSize], [x + antennaeLength * 2, y - bodySize - antennaeLength * 2]])}
+                    d={line([[x, y - bodySize - headSize], [x + 10, y - bodySize - headSize - antennaeLength], [x + 5, y - bodySize - headSize - antennaeLength - 10]])}
                 ></path>
                 <path
                     className="ant-front-leg-1"

@@ -37,7 +37,6 @@ const minOf = (dataset: AntDataset, key: keyof Ant) => d3.min((dataset.map(e => 
 function AntsChart() {
 
     /** State */
-
     const [dataset, setDataset] = useState<AntDataset>([])
     const [feature2Variable, setFeature2Variable] = useState<FeatureToVariabile>(
         { 
@@ -48,29 +47,14 @@ function AntsChart() {
             headSize: 'v5',
             bodySize: 'v6'
     });
-    const [resize, setResize] = useState(window.innerWidth);
+    const [_, setResize] = useState(window.innerWidth);
     const SVGRef = useRef(null);
     const chartRef = useRef(null);
     const fileUploadRef = useRef(null);
 
-    /** Effects */
-
     useEffect(() => {
-        // initializeChart();
-        // updateChart();
         window.addEventListener('resize', () => setResize(window.innerWidth));
     }, []);
-
-    // useEffect(() => {
-    //     initializeChart();
-    //     updateChart();
-    // }, [resize])
-
-    // useEffect(() => {
-    //     updateChart();
-    // }, [dataset, feature2Variable]);
-
-    /** Utility functions */
 
     function getVariabileByFeature (feat: keyof FeatureToVariabile): keyof Ant {
         return feature2Variable[feat] as keyof Ant
@@ -78,11 +62,6 @@ function AntsChart() {
 
     function getAntValue (ant: Ant, feat: keyof FeatureToVariabile) {
         return ant[getVariabileByFeature(feat)];
-    }
-
-    function isReady() {
-        const card = document.querySelector(".card");
-        return !!card;
     }
 
     function getDimensions () {
@@ -93,323 +72,6 @@ function AntsChart() {
         const innerWidth = outerWidth - margin.left - margin.right;
         const innerHeight = outerHeight - margin.top - margin.bottom;
         return { outerHeight, outerWidth, margin, innerWidth, innerHeight}
-    }
-
-
-    /** Chart  */
-
-    function initializeChart () {
-        // if (isReady()) {
-        //     const { outerWidth, outerHeight, margin } = getDimensions();
-        //     const svg = d3.select(SVGRef.current)
-        //         .attr("width", outerWidth)
-        //         .attr("height", outerHeight);
-
-            // if (!chart) svg.append("g").attr("class", "ants-chart-svg-g")
-            // svg.select("g")
-            //     .attr("transform", translate(margin.left, margin.top))
-            //     .attr("width", outerWidth)
-            //     .attr("height", outerHeight);
-        // }
-    }
-
-    function updateChart () {
-        // const svg = d3.select(SVGRef.current).select(".ants-chart-svg-g")
-        // if (!svg || !dataset.length || !isReady()) return;
-        // const { margin, innerWidth, innerHeight } = getDimensions();
-
-        /**
-         * Create ants bodies
-         */
-        // const antsBodies = svg.selectAll('.ant.ant-body').data(dataset);
-        // antsBodies
-        //     .enter()
-        //     .append('ellipse')
-        //     .attr("fill", `${antColor}`)
-        //     .attr("class", "ant ant-body")
-        // antsBodies
-        //     .transition()
-        //     .duration(transitionDuration)
-        //     .attr('cx', d => xScale(getAntValue(d, 'x')))
-        //     .attr('cy', d => yScale(d[getVariabileByFeature('y')]))
-        //     .attr("rx", d => d[getVariabileByFeature('bodySize')] *0.8)
-        //     .attr("ry", d => d[getVariabileByFeature('bodySize')])
-
-
-          // Head
-        //   const antHeads = svg.selectAll('.ant.ant-head').data(dataset);
-        //   antHeads
-        //       .enter()
-        //       .append('ellipse')
-        //       .attr("fill", `${antColor}`)
-        //       .attr("class", "ant ant-head")
-        //       antHeads
-        //       .transition()
-        //       .duration(transitionDuration)
-        //       .attr('cx', d => xScale(getAntValue(d, 'x')))
-        //       .attr('cy', d => yScale(d[getVariabileByFeature('y')]) - getAntValue(d, 'bodySize') - getAntValue(d, 'headSize'))
-        //       .attr("rx", d => getAntValue(d, 'headSize') * 0.7)
-        //       .attr("ry", d => getAntValue(d, 'headSize'))
-
-         // Front legs
-    //      const frontLegs1 = svg.selectAll('.ant.ant-front-leg-1').data(dataset);
-    //      frontLegs1
-    //          .enter()
-    //          .append('polyline')
-    //          .attr('stroke', `${antColor}`)
-    //          .attr('stroke-width', '2')
-    //          .attr('fill', 'none')
-    //          .attr("class", "ant ant-front-leg-1")
-    //          .attr('points', d => listOfPoints(
-    //             [
-    //                 { x: 0, y: 0 },
-    //                 { x: 0, y: 0 },
-    //                 { x: 0, y: 0 },
-    //             ]
-    //         ))
-    //     frontLegs1
-    //          .transition()
-    //          .duration(transitionDuration)
-    //          .attr('points', d => listOfPoints(
-    //              [
-    //                  { x: xScale(getAntValue(d, 'x')), y: yScale(getAntValue(d, 'y')) },
-    //                  { x: xScale(getAntValue(d, 'x')) + 15, y: yScale(getAntValue(d, 'y')) - 10 },
-    //                  { x: xScale(getAntValue(d, 'x')) + 20, y: yScale(getAntValue(d, 'y')) - 10 - getAntValue(d, 'legsLength')   }
-    //              ]
-    //          ))
-    //     const frontLegs2 = svg.selectAll('.ant.ant-front-leg-2').data(dataset);
-    //     frontLegs2
-    //         .enter()
-    //         .append('polyline')
-    //         .attr('stroke', `${antColor}`)
-    //         .attr('stroke-width', '2')
-    //         .attr('fill', 'none')
-    //         .attr("class", "ant ant-front-leg-2")
-    //         .attr('points', d => listOfPoints(
-    //             [
-    //                 { x: 0, y: 0 },
-    //                 { x: 0, y: 0 },
-    //                 { x: 0, y: 0 },
-    //             ]
-    //         ))
-    // frontLegs2
-    //         .transition()
-    //         .duration(transitionDuration)
-    //         .attr('points', d => listOfPoints(
-    //             [
-    //                 { x: xScale(getAntValue(d, 'x')), y: yScale(getAntValue(d, 'y')) },
-    //                 { x: xScale(getAntValue(d, 'x')) - 15, y: yScale(getAntValue(d, 'y')) - 10 },
-    //                 { x: xScale(getAntValue(d, 'x')) - 20, y: yScale(getAntValue(d, 'y')) - 10 - getAntValue(d, 'legsLength')   }
-    //             ]
-    //         ))
-
-
-        // Middle legs
-        // const middleLegs1 = svg.selectAll('.ant.ant-middle-leg-1').data(dataset);
-        // middleLegs1
-        //     .enter()
-        //     .append('polyline')
-        //     .attr('stroke', `${antColor}`)
-        //     .attr('stroke-width', '2')
-        //     .attr('fill', 'none')
-        //     .attr("class", "ant ant-middle-leg-1")
-        //     .attr('points', d => listOfPoints(
-        //         [
-        //             { x: 0, y: 0 },
-        //             { x: 0, y: 0 },
-        //             { x: 0, y: 0 },
-        //         ]
-        //     ))
-        // middleLegs1
-        //         .transition()
-        //         .duration(transitionDuration)
-        //         .attr('points', d => listOfPoints(
-        //             [
-        //                 { x: xScale(getAntValue(d, 'x')), y: yScale(getAntValue(d, 'y')) },
-        //                 { x: xScale(getAntValue(d, 'x')) + 15, y: yScale(getAntValue(d, 'y')) },
-        //                 { x: xScale(getAntValue(d, 'x')) + 15 + getAntValue(d, 'legsLength'), y: yScale(getAntValue(d, 'y')) - getAntValue(d, 'legsLength') },
-        //             ]
-        //         ))
-        // const middleLegs2 = svg.selectAll('.ant.ant-middle-leg-2').data(dataset);
-        // middleLegs2
-        //     .enter()
-        //     .append('polyline')
-        //     .attr('stroke', `${antColor}`)
-        //     .attr('stroke-width', '2')
-        //     .attr('fill', 'none')
-        //     .attr("class", "ant ant-middle-leg-2")
-        //     .attr('points', d => listOfPoints(
-        //         [
-        //             { x: 0, y: 0 },
-        //             { x: 0, y: 0 },
-        //             { x: 0, y: 0 },
-        //         ]
-        //     ))
-        // middleLegs2
-        //     .transition()
-        //     .duration(transitionDuration)
-        //     .attr('points', d => listOfPoints(
-        //         [
-        //             { x: xScale(getAntValue(d, 'x')), y: yScale(getAntValue(d, 'y')) },
-        //             { x: xScale(getAntValue(d, 'x')) - 15, y: yScale(getAntValue(d, 'y')) },
-        //             { x: xScale(getAntValue(d, 'x')) - 15 - getAntValue(d, 'legsLength'), y: yScale(getAntValue(d, 'y')) - getAntValue(d, 'legsLength') },
-        //         ]
-        //     ))
-
-
-        // Backs
-        // const antBacks = svg.selectAll('.ant.ant-back').data(dataset);
-        //     antBacks
-        //         .enter()
-        //         .append('ellipse')
-        //         .attr("fill", `${antColor}`)
-        //         .attr("class", "ant ant-back")
-        //     antBacks
-        //         .transition()
-        //         .duration(transitionDuration)
-        //         .attr('cx', d => xScale(getAntValue(d, 'x')))
-        //         .attr('cy', d => yScale(getAntValue(d, 'y')) + getAntValue(d, 'bodySize') * 2)
-        //         .attr('rx', d => getAntValue(d, 'bodySize') * 0.8)
-        //         .attr('ry', d => getAntValue(d, 'bodySize'))
-
-        
-        // // Antennas
-        // const antAntennasFirst = svg.selectAll('.ant.ant-antenna-1').data(dataset);
-        // antAntennasFirst
-        //     .enter()
-        //     .append('polyline')
-        //     .attr('stroke', `${antColor}`)
-        //     .attr('stroke-width', '2')
-        //     .attr('fill', 'none')
-        //     .attr('class', "ant ant-antenna-1")
-        //     .attr('points', d => listOfPoints(
-        //         [
-        //             { x: 0, y: 0 },
-        //             { x: 0, y: 0 },
-        //         ]
-        //     ))
-            
-        // antAntennasFirst
-        //     .transition()
-        //     .duration(transitionDuration)
-        //     .attr('points', d => listOfPoints(
-        //         [
-        //             { x: xScale(getAntValue(d, 'x')), y: yScale(getAntValue(d, 'y')) - getAntValue(d, 'bodySize') - getAntValue(d, 'headSize') },
-        //             { x: xScale(getAntValue(d, 'x')) + getAntValue(d, 'antennaeLength') * 2, y: yScale(getAntValue(d, 'y')) - getAntValue(d, 'bodySize') - getAntValue(d, 'headSize') - getAntValue(d, 'antennaeLength') * 2 },
-        //         ]
-        //     ))
-        
-        // const antAntennasSecond = svg.selectAll('.ant.ant-antenna-2').data(dataset);
-        // antAntennasSecond
-        //     .enter()
-        //     .append('polyline')
-        //     .attr('stroke', `${antColor}`)
-        //     .attr('stroke-width', '2')
-        //     .attr('fill', 'none')
-        //     .attr("class", "ant ant-antenna-2")
-        //     .attr('points', d => listOfPoints(
-        //         [
-        //             { x: 0, y: 0 },
-        //             { x: 0, y: 0 },
-        //         ]
-        //     ))
-        // antAntennasSecond
-        //     .transition()
-        //     .duration(transitionDuration)
-        //     .attr('points', d => listOfPoints(
-        //         [
-        //             { x: xScale(getAntValue(d, 'x')), y: yScale(getAntValue(d, 'y')) - getAntValue(d, 'bodySize') - getAntValue(d, 'headSize') },
-        //             { x: xScale(getAntValue(d, 'x')) - getAntValue(d, 'antennaeLength') * 2, y: yScale(getAntValue(d, 'y')) - getAntValue(d, 'bodySize') - getAntValue(d, 'headSize') - getAntValue(d, 'antennaeLength') * 2 },
-        //         ]
-        //     ))
-
-
-        // const antLegsFirst = svg.selectAll('.ant.ant-leg-1').data(dataset);
-        // antLegsFirst
-        //     .enter()
-        //     .append('polyline')
-        //     .attr('stroke', `${antColor}`)
-        //     .attr('stroke-width', '2')
-        //     .attr('fill', 'none')
-        //     .attr('class', "ant ant-leg-1")
-        //     .attr('points', d => listOfPoints(
-        //         [
-        //             { x: 0, y: 0 },
-        //             { x: 0, y: 0 },
-        //             { x: 0, y: 0 },
-        //         ]
-        //     ))
-        
-        // antLegsFirst
-        //     .transition()
-        //     .duration(transitionDuration)
-        //     .attr('points', d => listOfPoints(
-        //         [
-        //             { x: xScale(getAntValue(d, 'x')), y: yScale(getAntValue(d, 'y')) },
-        //             { x: xScale(getAntValue(d, 'x')) + getAntValue(d, 'bodySize') + 5, y: yScale(getAntValue(d, 'y')) + 5 },
-        //             { x: xScale(getAntValue(d, 'x')) + getAntValue(d, 'bodySize') + 5 + getAntValue(d, 'legsLength'), y: yScale(getAntValue(d, 'y')) + 5 + getAntValue(d, 'legsLength') },
-        //         ]
-        //     ))
-
-        // const antLegsSecond = svg.selectAll('.ant.ant-leg-2').data(dataset);
-        // antLegsSecond
-        //     .enter()
-        //     .append('polyline')
-        //     .attr('stroke', `${antColor}`)
-        //     .attr('stroke-width', '2')
-        //     .attr('fill', 'none')
-        //     .attr('class', "ant ant-leg-2")
-        //     .attr('points', d => listOfPoints(
-        //         [
-        //             { x: 0, y: 0 },
-        //             { x: 0, y: 0 },
-        //             { x: 0, y: 0 },
-        //         ]
-        //     ))
-        // antLegsSecond
-        //     .transition()
-        //     .duration(transitionDuration)
-        //     .attr('points', d => listOfPoints(
-        //         [
-        //             { x: xScale(getAntValue(d, 'x')), y: yScale(getAntValue(d, 'y')) },
-        //             { x: xScale(getAntValue(d, 'x')) - getAntValue(d, 'bodySize') - 5, y: yScale(getAntValue(d, 'y')) + 5 },
-        //             { x: xScale(getAntValue(d, 'x')) - getAntValue(d, 'bodySize') - 5 - getAntValue(d, 'legsLength'), y: yScale(getAntValue(d, 'y')) + 5 + getAntValue(d, 'legsLength') },
-        //         ]
-        //     ))
-    }
-
-    /** Sets all events listeners
-     * @todo refactor autoevent listeners subscriber without listing all keys
-     */
-    function setEventListeners () {
-
-        setEventListenerOn('ant-antenna-1');
-        setEventListenerOn('ant-antenna-2');
-        setEventListenerOn('ant-head');
-        setEventListenerOn('ant-front-leg-1');
-        setEventListenerOn('ant-front-leg-2');
-        setEventListenerOn('ant-middle-leg-1');
-        setEventListenerOn('ant-middle-leg-2');
-        setEventListenerOn('ant-back');
-        setEventListenerOn('ant-body');
-        setEventListenerOn('ant-back-leg-1');
-        setEventListenerOn('ant-back-leg-2');
-    }
-
-    function setEventListenerOn(key: string) {
-        const prop = getPropertyByKey(key);
-        if (!prop) return;
-
-        d3.selectAll('.' + key).on('click', () => {
-            const currentXVariable = feature2Variable.x;
-            const newXVariable = getVariabileByFeature(prop as any);
-            setFeature2Variable({ ...feature2Variable, x: newXVariable, [prop]: currentXVariable })
-        });
-        d3.selectAll("."+ key).on('contextmenu', () => {
-            const currentYVariable = feature2Variable.x;
-            const newYVariable = getVariabileByFeature(prop as any);
-            setFeature2Variable({ ...feature2Variable, y: newYVariable, [prop]: currentYVariable })
-        });
     }
 
     function onLeftClick(event: any) {
@@ -506,9 +168,6 @@ function AntsChart() {
     .attr("transform", translate(-10, -20))
     .attr('class', 'yAxis-label')
     .text(feature2Variable.y)
-
-    // setEventListeners();
-
 
     return (
         <Fragment>
