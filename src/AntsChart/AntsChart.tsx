@@ -99,12 +99,12 @@ function AntsChart() {
         const prop = getPropertyByKey(key);
         const ant = dataset[idx];
         const value = getAntValue(ant, prop);
-        if (new Date().getTime() - tooltip.lastUpdate < 50) return;
+        // if (new Date().getTime() - tooltip.lastUpdate < 50) return;
         setTooltip({ visible: true, x: event.pageX + 10, y: event.pageY - 10, value: `${translateProperty(prop)} (${getVariabileByFeature(prop)}): ${value}`, lastUpdate: new Date().getTime()  })
     }
 
     function onMouseLeave() {
-        if (new Date().getTime() - tooltip.lastUpdate < 50) return;
+        // if (new Date().getTime() - tooltip.lastUpdate < 50) return;
         setTooltip({ ...tooltip, visible: false, lastUpdate: new Date().getTime() })
     }
 
