@@ -5,6 +5,9 @@ import { generateDataset, getPropertyByKey, isDatasetValid } from "../utils/data
 import { Ant, AntDataset } from "./DatasetModel";
 import './AntsChart.css';
 import AntSVG from "./Ant/Ant";
+import Tooltip from "./Tooltip/Tooltip";
+import { translateCSS } from "../utils/geometry";
+import { translateProperty } from "../utils/translation";
 
 export interface Feature {
     antennaeLength: number;
@@ -28,9 +31,6 @@ export interface FeatureToVariabile  {
     // backSize: string;
 }
 
-const translate = (x: number, y: number) => `translate(${x}, ${y})`;
-
-
 const maxOf = (dataset: AntDataset, key: keyof Ant) => d3.max((dataset.map(e => e[key]))) as number;
 const minOf = (dataset: AntDataset, key: keyof Ant) => d3.min((dataset.map(e => e[key]))) as number;
 
@@ -47,6 +47,7 @@ function AntsChart() {
             headSize: 'v5',
             bodySize: 'v6'
     });
+    const [tooltip, setTooltip] = useState({ x: 0, y: 0, visible: false, value: "", lastUpdate: 0 });
     const [_, setResize] = useState(window.innerWidth);
     const SVGRef = useRef(null);
     const chartRef = useRef(null);
@@ -91,6 +92,20 @@ function AntsChart() {
         const currentYVariable = feature2Variable.x;
         const newYVariable = getVariabileByFeature(prop as any);
         setFeature2Variable({ ...feature2Variable, y: newYVariable, [prop]: currentYVariable })
+    }
+
+    function onMouseOver (idx: number, event: any) {
+        const key = event.target.getAttribute('class');
+        const prop = getPropertyByKey(key);
+        const ant = dataset[idx];
+        const value = getAntValue(ant, prop);
+        if (new Date().getTime() - tooltip.lastUpdate < 50) return;
+        setTooltip({ visible: true, x: event.pageX + 10, y: event.pageY - 10, value: `${translateProperty(prop)} (${getVariabileByFeature(prop)}): ${value}`, lastUpdate: new Date().getTime()  })
+    }
+
+    function onMouseLeave() {
+        if (new Date().getTime() - tooltip.lastUpdate < 50) return;
+        setTooltip({ ...tooltip, visible: false, lastUpdate: new Date().getTime() })
     }
 
     function onFileUploadButtonClick () {
@@ -145,12 +160,12 @@ function AntsChart() {
     const xAxis = d3.axisBottom(xScale);
     chart
         .append("g")
-        .attr("transform", translate(0, innerHeight))
+        .attr("transform", translateCSS(0, innerHeight))
         .attr('class', 'xAxis')
         .call(xAxis);
     chart
         .append('text')
-        .attr("transform", translate(innerWidth / 2, innerHeight + 30))
+        .attr("transform", translateCSS(innerWidth / 2, innerHeight + 30))
         .style("text-anchor", "middle")
         .attr('class', 'xAxis-label')
         .text(feature2Variable.x)
@@ -159,13 +174,13 @@ function AntsChart() {
     const yAxis = d3.axisLeft(yScale);
     chart
         .append("g")
-        .attr("transform", translate(0, 0))
+        .attr("transform", translateCSS(0, 0))
         .attr('class', 'yAxis')
         .call(yAxis);
 
     chart
     .append('text')
-    .attr("transform", translate(-10, -20))
+    .attr("transform", translateCSS(-10, -20))
     .attr('class', 'yAxis-label')
     .text(feature2Variable.y)
 
@@ -184,7 +199,7 @@ function AntsChart() {
             <div className="container">
                 <div className="card" onContextMenu={e => e.preventDefault()}>
                     <svg id="ants-chart-svg" ref={SVGRef} width={outerWidth} height={outerHeight} >
-                        <g transform={translate(margin.left, margin.top)} ref={chartRef}>
+                        <g transform={translateCSS(margin.left, margin.top)} ref={chartRef}>
                             {dataset.map((d, idx) => (
                                 <AntSVG
                                     key={idx} 
@@ -196,10 +211,13 @@ function AntsChart() {
                                     legsLength={getAntValue(d, 'legsLength')}
                                     onLeftClick={onLeftClick}
                                     onRightClick={onRightClick}
+                                    onMouseOver={e => onMouseOver(idx, e)}
+                                    onMouseLeave={onMouseLeave}
                                 />
                             ))}
                         </g>
                     </svg>
+                    <Tooltip x={tooltip.x} y={tooltip.y} value={tooltip.value} visible={tooltip.visible} />
                 </div>
             </div>
         </Fragment>

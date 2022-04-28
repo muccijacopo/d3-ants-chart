@@ -7,6 +7,10 @@ header h1 {
     cursor: pointer;
 }
 
+svg {
+    position: relative;
+}
+
 .xAxis-label, .yAxis-label {
     font-weight: bold;
 }
@@ -48,4 +52,12 @@ button:hover {
     height: 650px;
     border-radius: 5px;
     margin: 0 auto;
+}
+
+.tooltip {
+    background: var(--text-color);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    position: absolute;
 }

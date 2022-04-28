@@ -11,6 +11,8 @@ export interface Props {
     bodySize: number;
     onLeftClick: any
     onRightClick: any;
+    onMouseOver: any;
+    onMouseLeave: any;
 }
 
 function AntSVG(props: Props) {
@@ -28,7 +30,12 @@ function AntSVG(props: Props) {
 
     return (
         <Fragment>
-            <g className='ant' onClick={props.onLeftClick} onContextMenu={props.onRightClick}>
+            <g className='ant' 
+                onClick={props.onLeftClick} 
+                onContextMenu={props.onRightClick}
+                onMouseOver={props.onMouseOver}
+                onMouseLeave={props.onMouseLeave}
+                >
                 <path
                     className="ant-antenna-1"
                     d={line([[x, y - bodySize - headSize], [x - 10, y - bodySize - headSize - antennaeLength], [x - 5, y - bodySize - headSize - antennaeLength - 10]])}
