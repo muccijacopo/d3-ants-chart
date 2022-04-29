@@ -138,7 +138,17 @@ function AntsChart() {
             cleanUp();
         }
     }
+
     const { margin, innerWidth, innerHeight } = getDimensions();
+    const chart = d3.select(chartRef.current);
+
+    /** Axis & scales */
+
+    // Remove previous generated axis
+    chart.select('.xAxis').remove();
+    chart.select('.xAxis-label').remove();
+    chart.select('.yAxis').remove();
+    chart.select('.yAxis-label').remove();
 
     const xScale = d3
     .scaleLinear()
@@ -150,13 +160,6 @@ function AntsChart() {
             .domain([minOf(dataset, getVariabileByFeature('y')), maxOf(dataset, getVariabileByFeature('y'))])
             .range([innerHeight, 0])
 
-    const chart = d3.select(chartRef.current);
-    // Remove previous scales
-    chart.select('.xAxis').remove();
-    chart.select('.xAxis-label').remove();
-    chart.select('.yAxis').remove();
-    chart.select('.yAxis-label').remove();
-
     const xAxis = d3.axisBottom(xScale);
     chart
         .append("g")
@@ -165,7 +168,7 @@ function AntsChart() {
         .call(xAxis);
     chart
         .append('text')
-        .attr("transform", translateCSS(innerWidth / 2, innerHeight + 30))
+        .attr("transform", translateCSS(innerWidth / 2, innerHeight + margin.bottom - 10))
         .style("text-anchor", "middle")
         .attr('class', 'xAxis-label')
         .text(feature2Variable.x)

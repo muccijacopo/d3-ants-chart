@@ -11,13 +11,29 @@ svg {
     position: relative;
 }
 
+
+/** Axis customization */
+
 .xAxis-label, .yAxis-label {
     font-weight: bold;
+    font-size: 1.3rem;
 }
 
 .xAxis > * > *, .yAxis > * > *, .xAxis path, .yAxis path {
-    stroke: #292929;
+    stroke: var(--text-color);
+    fill: transparent;
 }
+
+.xAxis .domain, .yAxis .domain {
+    stroke-width: 3;
+    stroke: #2e2e2e;
+    stroke-linecap: round;
+}
+
+.xAxis > .tick > line, .yAxis > .tick > line {
+    display: none;
+}
+
 
 .ant {
     cursor: pointer;
