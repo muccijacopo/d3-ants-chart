@@ -174,7 +174,7 @@ function AntsChart() {
         .text(feature2Variable.x)
 
     /** Y Axis */
-    const yAxis = d3.axisLeft(yScale);
+    const yAxis = d3.axisLeft(yScale).ticks(8)
     chart
         .append("g")
         .attr("transform", translateCSS(0, 0))
@@ -203,8 +203,10 @@ function AntsChart() {
                 <div className="card" onContextMenu={e => e.preventDefault()}>
                     <svg id="ants-chart-svg" ref={SVGRef} width={outerWidth} height={outerHeight} >
                         <g transform={translateCSS(margin.left, margin.top)} ref={chartRef}>
-                            {dataset.map((d, idx) => (
-                                <AntSVG
+                            <Fragment>
+                                {yScale.ticks(8).map((d => <line x1={0} x2={innerWidth} y1={yScale(d)} y2={yScale(d)} className="gridlines"></line>))}
+                                {dataset.map((d, idx) => (
+                                    <AntSVG
                                     key={idx} 
                                     x={xScale(getAntValue(d, 'x'))} 
                                     y={yScale(getAntValue(d, 'y'))} 
@@ -216,8 +218,9 @@ function AntsChart() {
                                     onRightClick={onRightClick}
                                     onMouseOver={e => onMouseOver(idx, e)}
                                     onMouseLeave={onMouseLeave}
-                                />
-                            ))}
+                                    />
+                                    ))}
+                            </Fragment>
                         </g>
                     </svg>
                     <Tooltip x={tooltip.x} y={tooltip.y} value={tooltip.value} visible={tooltip.visible} />
