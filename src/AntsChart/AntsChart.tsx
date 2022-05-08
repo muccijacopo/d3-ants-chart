@@ -75,21 +75,21 @@ function AntsChart() {
         return { outerHeight, outerWidth, margin, innerWidth, innerHeight}
     }
 
-    function onLeftClick(event: any) {
+    function onRightClick(event: any) {
         const key = event.target.getAttribute('class')
         const prop = getPropertyByKey(key);
         if (!prop) return;
-        const currentXVariable = feature2Variable.x;
+        const currentXVariable = getVariabileByFeature("x");
         const newXVariable = getVariabileByFeature(prop as any);
         setFeature2Variable({ ...feature2Variable, x: newXVariable, [prop]: currentXVariable })
 
     }
 
-    function onRightClick (event: any) {
+    function onLeftClick (event: any) {
         const key = event.target.getAttribute('class')
         const prop = getPropertyByKey(key);
         if (!prop) return;
-        const currentYVariable = feature2Variable.x;
+        const currentYVariable = getVariabileByFeature("y");
         const newYVariable = getVariabileByFeature(prop as any);
         setFeature2Variable({ ...feature2Variable, y: newYVariable, [prop]: currentYVariable })
     }
