@@ -14,23 +14,29 @@ svg {
 
 /** Axis customization */
 
-.xAxis-label, .yAxis-label {
+.xAxis-label,
+.yAxis-label {
     font-weight: bold;
     font-size: 1.3rem;
 }
 
-.xAxis > * > *, .yAxis > * > *, .xAxis path, .yAxis path {
+.xAxis>*>*,
+.yAxis>*>*,
+.xAxis path,
+.yAxis path {
     stroke: var(--text-color);
     fill: transparent;
 }
 
-.xAxis .domain, .yAxis .domain {
+.xAxis .domain,
+.yAxis .domain {
     stroke-width: 3;
     stroke: #2e2e2e;
     stroke-linecap: round;
 }
 
-.xAxis > .tick > line, .yAxis > .tick > line {
+.xAxis>.tick>line,
+.yAxis>.tick>line {
     display: none;
 }
 
@@ -44,7 +50,8 @@ svg {
     cursor: pointer;
 }
 
-polyline:hover, line:hover {
+polyline:hover,
+line:hover {
     stroke: var(--selection-color);
 }
 
@@ -57,6 +64,7 @@ button {
     padding: 5px 10px;
     cursor: pointer;
 }
+
 button:hover {
     filter: brightness(120%);
 }
@@ -81,4 +89,8 @@ button:hover {
     padding: 10px;
     border-radius: 5px;
     position: absolute;
+}
+
+.tooltip .title {
+    font-size: 1.2rem;
 }

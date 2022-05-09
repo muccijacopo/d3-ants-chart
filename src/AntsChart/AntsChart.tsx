@@ -47,7 +47,7 @@ function AntsChart() {
             headSize: 'v5',
             bodySize: 'v6'
         });
-    const [tooltip, setTooltip] = useState({ x: 0, y: 0, visible: false, value: "", lastUpdate: 0 });
+    const [tooltip, setTooltip] = useState({ x: 0, y: 0, visible: false, title: "", value: "", lastUpdate: 0 });
     const [_, setResize] = useState(window.innerWidth);
     const SVGRef = useRef(null);
     const chartRef = useRef(null);
@@ -100,7 +100,7 @@ function AntsChart() {
         const ant = dataset[idx];
         const value = getAntValue(ant, prop);
         // if (new Date().getTime() - tooltip.lastUpdate < 50) return;
-        setTooltip({ visible: true, x: event.pageX + 10, y: event.pageY - 10, value: `${translateProperty(prop)} (${getVariabileByFeature(prop)}): ${value}`, lastUpdate: new Date().getTime() })
+        setTooltip({ visible: true, x: event.pageX + 10, y: event.pageY - 10, title: `Ant ${idx}`, value: `${translateProperty(prop)} (${getVariabileByFeature(prop)}): ${value}`, lastUpdate: new Date().getTime() })
     }
 
     function onMouseLeave() {
@@ -204,7 +204,7 @@ function AntsChart() {
                     <svg id="ants-chart-svg" ref={SVGRef} width={outerWidth} height={outerHeight} >
                         <g transform={translateCSS(margin.left, margin.top)} ref={chartRef}>
                             <Fragment>
-                                {yScale.ticks(8).map((d => <line x1={0} x2={innerWidth} y1={yScale(d)} y2={yScale(d)} className="gridlines"></line>))}
+                                {yScale.ticks(8).map(((d, idx) => <line key={idx} x1={0} x2={innerWidth} y1={yScale(d)} y2={yScale(d)} className="gridlines"></line>))}
                                 {dataset.map((d, idx) => (
                                     <AntSVG
                                         key={idx}
@@ -223,7 +223,7 @@ function AntsChart() {
                             </Fragment>
                         </g>
                     </svg>
-                    <Tooltip x={tooltip.x} y={tooltip.y} value={tooltip.value} visible={tooltip.visible} />
+                    <Tooltip x={tooltip.x} y={tooltip.y} title={tooltip.title} value={tooltip.value} visible={tooltip.visible} />
                 </div>
             </div>
         </Fragment>
