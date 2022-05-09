@@ -1,7 +1,7 @@
 {
-  "name": "react-d3",
+  "name": "d3-ants-chart",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "dev": "vite --port 8000",
     "build": "tsc && vite build",
