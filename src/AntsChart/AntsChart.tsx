@@ -19,7 +19,7 @@ export interface Feature {
     backSize: number;
 }
 
-export interface FeatureToVariabile  {
+export interface FeatureToVariabile {
     x: string;
     y: string;
     antennaeLength: string;
@@ -39,14 +39,14 @@ function AntsChart() {
     /** State */
     const [dataset, setDataset] = useState<AntDataset>([])
     const [feature2Variable, setFeature2Variable] = useState<FeatureToVariabile>(
-        { 
-            x: 'v1', 
+        {
+            x: 'v1',
             y: 'v2',
             antennaeLength: 'v3',
             legsLength: 'v4',
             headSize: 'v5',
             bodySize: 'v6'
-    });
+        });
     const [tooltip, setTooltip] = useState({ x: 0, y: 0, visible: false, value: "", lastUpdate: 0 });
     const [_, setResize] = useState(window.innerWidth);
     const SVGRef = useRef(null);
@@ -57,22 +57,22 @@ function AntsChart() {
         window.addEventListener('resize', () => setResize(window.innerWidth));
     }, []);
 
-    function getVariabileByFeature (feat: keyof FeatureToVariabile): keyof Ant {
+    function getVariabileByFeature(feat: keyof FeatureToVariabile): keyof Ant {
         return feature2Variable[feat] as keyof Ant
     }
 
-    function getAntValue (ant: Ant, feat: keyof FeatureToVariabile) {
+    function getAntValue(ant: Ant, feat: keyof FeatureToVariabile) {
         return ant[getVariabileByFeature(feat)];
     }
 
-    function getDimensions () {
+    function getDimensions() {
         const card = document.querySelector(".card")
         const outerWidth = card?.getBoundingClientRect().width ?? window.innerWidth
         const outerHeight = card?.getBoundingClientRect().height ?? window.innerHeight
-        const margin = {top: 50, right: 50, bottom: 50, left: 50 };
+        const margin = { top: 50, right: 50, bottom: 50, left: 50 };
         const innerWidth = outerWidth - margin.left - margin.right;
         const innerHeight = outerHeight - margin.top - margin.bottom;
-        return { outerHeight, outerWidth, margin, innerWidth, innerHeight}
+        return { outerHeight, outerWidth, margin, innerWidth, innerHeight }
     }
 
     function onRightClick(event: any) {
@@ -85,7 +85,7 @@ function AntsChart() {
 
     }
 
-    function onLeftClick (event: any) {
+    function onLeftClick(event: any) {
         const key = event.target.getAttribute('class')
         const prop = getPropertyByKey(key);
         if (!prop) return;
@@ -94,13 +94,13 @@ function AntsChart() {
         setFeature2Variable({ ...feature2Variable, y: newYVariable, [prop]: currentYVariable })
     }
 
-    function onMouseOver (idx: number, event: any) {
+    function onMouseOver(idx: number, event: any) {
         const key = event.target.getAttribute('class');
         const prop = getPropertyByKey(key);
         const ant = dataset[idx];
         const value = getAntValue(ant, prop);
         // if (new Date().getTime() - tooltip.lastUpdate < 50) return;
-        setTooltip({ visible: true, x: event.pageX + 10, y: event.pageY - 10, value: `${translateProperty(prop)} (${getVariabileByFeature(prop)}): ${value}`, lastUpdate: new Date().getTime()  })
+        setTooltip({ visible: true, x: event.pageX + 10, y: event.pageY - 10, value: `${translateProperty(prop)} (${getVariabileByFeature(prop)}): ${value}`, lastUpdate: new Date().getTime() })
     }
 
     function onMouseLeave() {
@@ -108,11 +108,11 @@ function AntsChart() {
         setTooltip({ ...tooltip, visible: false, lastUpdate: new Date().getTime() })
     }
 
-    function onFileUploadButtonClick () {
+    function onFileUploadButtonClick() {
         (fileUploadRef.current as any).click();
     }
 
-    function handleFileUpload (evt: any) {
+    function handleFileUpload(evt: any) {
         const file = evt.target.files[0];
 
         let reader = new FileReader();
@@ -125,7 +125,7 @@ function AntsChart() {
         reader.onload = () => {
             try {
                 const dataset = JSON.parse(reader.result as string);
-                if (isDatasetValid(dataset)) setDataset(dataset);                
+                if (isDatasetValid(dataset)) setDataset(dataset);
                 cleanUp();
             } catch {
                 console.error("Error during file parsing");
@@ -151,14 +151,14 @@ function AntsChart() {
     chart.select('.yAxis-label').remove();
 
     const xScale = d3
-    .scaleLinear()
-    .domain([minOf(dataset, getVariabileByFeature('x')), maxOf(dataset, getVariabileByFeature('x'))])
-    .range([0, innerWidth])
+        .scaleLinear()
+        .domain([minOf(dataset, getVariabileByFeature('x')), maxOf(dataset, getVariabileByFeature('x'))])
+        .range([0, innerWidth])
 
     const yScale = d3
-            .scaleLinear()
-            .domain([minOf(dataset, getVariabileByFeature('y')), maxOf(dataset, getVariabileByFeature('y'))])
-            .range([innerHeight, 0])
+        .scaleLinear()
+        .domain([minOf(dataset, getVariabileByFeature('y')), maxOf(dataset, getVariabileByFeature('y'))])
+        .range([innerHeight, 0])
 
     const xAxis = d3.axisBottom(xScale);
     chart
@@ -182,21 +182,21 @@ function AntsChart() {
         .call(yAxis);
 
     chart
-    .append('text')
-    .attr("transform", translateCSS(-10, -20))
-    .attr('class', 'yAxis-label')
-    .text(feature2Variable.y)
+        .append('text')
+        .attr("transform", translateCSS(-10, -20))
+        .attr('class', 'yAxis-label')
+        .text(feature2Variable.y)
 
     return (
         <Fragment>
             <header>
                 <h1>🐜 Ant Visualization Chart</h1>
                 <button
-                    style={{ marginBottom: 20, marginRight: 10 }} 
+                    style={{ marginBottom: 20, marginRight: 10 }}
                     onClick={onFileUploadButtonClick}>From file (.JSON)</button>
-                    <input type="file" style={{ display: 'none'}} ref={fileUploadRef} onChange={handleFileUpload}/>
+                <input type="file" style={{ display: 'none' }} ref={fileUploadRef} onChange={handleFileUpload} />
                 <button
-                    style={{ marginBottom: 20 }} 
+                    style={{ marginBottom: 20 }}
                     onClick={() => setDataset(generateDataset())}>Random data</button>
             </header>
             <div className="container">
@@ -207,19 +207,19 @@ function AntsChart() {
                                 {yScale.ticks(8).map((d => <line x1={0} x2={innerWidth} y1={yScale(d)} y2={yScale(d)} className="gridlines"></line>))}
                                 {dataset.map((d, idx) => (
                                     <AntSVG
-                                    key={idx} 
-                                    x={xScale(getAntValue(d, 'x'))} 
-                                    y={yScale(getAntValue(d, 'y'))} 
-                                    bodySize={getAntValue(d, 'bodySize')}
-                                    headSize={getAntValue(d, 'headSize')}
-                                    antennaeLength={getAntValue(d, 'antennaeLength')}
-                                    legsLength={getAntValue(d, 'legsLength')}
-                                    onLeftClick={onLeftClick}
-                                    onRightClick={onRightClick}
-                                    onMouseOver={e => onMouseOver(idx, e)}
-                                    onMouseLeave={onMouseLeave}
+                                        key={idx}
+                                        x={xScale(getAntValue(d, 'x'))}
+                                        y={yScale(getAntValue(d, 'y'))}
+                                        bodySize={getAntValue(d, 'bodySize')}
+                                        headSize={getAntValue(d, 'headSize')}
+                                        antennaeLength={getAntValue(d, 'antennaeLength')}
+                                        legsLength={getAntValue(d, 'legsLength')}
+                                        onLeftClick={onLeftClick}
+                                        onRightClick={onRightClick}
+                                        onMouseOver={e => onMouseOver(idx, e)}
+                                        onMouseLeave={onMouseLeave}
                                     />
-                                    ))}
+                                ))}
                             </Fragment>
                         </g>
                     </svg>
