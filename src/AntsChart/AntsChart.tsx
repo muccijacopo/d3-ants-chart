@@ -100,7 +100,7 @@ function AntsChart() {
         const ant = dataset[idx];
         const value = getAntValue(ant, prop);
         // if (new Date().getTime() - tooltip.lastUpdate < 50) return;
-        setTooltip({ visible: true, x: event.pageX + 10, y: event.pageY - 10, title: `Ant ${idx}`, value: `${translateProperty(prop)} (${getVariabileByFeature(prop)}): ${value}`, lastUpdate: new Date().getTime() })
+        setTooltip({ visible: true, x: event.pageX + 10, y: event.pageY - 10, title: `Ant ${idx + 1}`, value: `${translateProperty(prop)} (${getVariabileByFeature(prop)}): ${value}`, lastUpdate: new Date().getTime() })
     }
 
     function onMouseLeave() {
