@@ -50,10 +50,10 @@ svg {
     cursor: pointer;
 }
 
-polyline:hover,
+/* polyline:hover,
 line:hover {
     stroke: var(--selection-color);
-}
+} */
 
 
 button {
