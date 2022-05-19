@@ -1,5 +1,5 @@
 # D3 Ants Chart
-Scatterplot chart using D3.js and React.
+Scatterplot (ants 🐜) chart using D3.js and React.
 ## Features
 - Dataset upload as JSON file
 - Random dataset generation
