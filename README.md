@@ -6,3 +6,16 @@ Scatterplot (ants 🐜) chart using D3.js and React.
 - Fully responsive chart
 - Variables switch using left/right click
 - Tooltips to display extra infos
+
+### Install dependencies
+```sh
+npm run install
+```
+### Development
+```sh
+npm run dev
+```
+### Build 
+```sh
+npm run build
+```
