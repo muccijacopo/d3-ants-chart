@@ -7,15 +7,10 @@ Scatterplot (ants 🐜) chart using D3.js and React.
 - Variables switch using left/right click
 - Tooltips to display extra infos
 
-### Install dependencies
-```sh
-npm run install
+To run the app
 ```
-### Development
-```sh
-npm run dev
+git clone https://github.com/muccijacopo/codicefiscale
+npm install
+npm start
 ```
-### Build 
-```sh
-npm run build
-```
+Open [http://localhost:8000/d3-ants-chart](http://localhost:8000/d3-ants-chart) to view it in the browser.
