@@ -9,8 +9,7 @@ Scatterplot (ants 🐜) chart using D3.js and React.
 
 To run the app
 ```
-git clone https://github.com/muccijacopo/codicefiscale
 npm install
-npm start
+npm run dev
 ```
 Open [http://localhost:8000/d3-ants-chart](http://localhost:8000/d3-ants-chart) to view it in the browser.
